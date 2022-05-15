@@ -5,34 +5,31 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Repository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Repository
-@AllArgsConstructor
+@Component
+@RequiredArgsConstructor
 public class EmployeeRepository {
 
-    private DynamoDBMapper dynamoDBMapper;
+    private final DynamoDBMapper dynamoDBMapper;
 
-    public Employee save(Employee funcionario) {
-        dynamoDBMapper.save(funcionario);
-        return funcionario;
+    public void put(Employee employee) {
+        dynamoDBMapper.save(employee);
     }
 
-    public Employee getFuncionarioById(String funcionarioId) {
-        return dynamoDBMapper.load(Employee.class, funcionarioId);
+    public Employee get(String id) {
+        return dynamoDBMapper.load(Employee.class, id);
     }
 
-    public String delete(String funcionarioId) {
-        Employee funcionario = dynamoDBMapper.load(Employee.class, funcionarioId);
-        dynamoDBMapper.delete(funcionario);
-        return "Funcionário Deletado!!";
+    public void delete(String id) {
+        Employee employee = dynamoDBMapper.load(Employee.class, id);
+        dynamoDBMapper.delete(employee);
     }
 
-    public String update(String funcionarioId, Employee funcionario) {
-        dynamoDBMapper.save(funcionario,
-                new DynamoDBSaveExpression().withExpectedEntry("funcionarioId",
-                        new ExpectedAttributeValue(new AttributeValue().withS(funcionarioId))));
-        return funcionarioId;
+    public void update(String id, Employee employee) {
+        dynamoDBMapper.save(employee,
+                new DynamoDBSaveExpression().withExpectedEntry("id",
+                        new ExpectedAttributeValue(new AttributeValue().withS(id))));
     }
 }
