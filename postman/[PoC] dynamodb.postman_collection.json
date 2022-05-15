@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "b36af238-f971-42ff-ba46-650fca5fc9b3",
+		"name": "[PoC] dynamodb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "save",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"funcionarioId\": \"5\",\r\n    \"nome\": \"Daniel\",\r\n    \"departamento\": {\r\n        \"nome\": \"TI\",\r\n        \"codigo\": \"2\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/funcionario",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"funcionario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "localhost:8080/funcionario/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"funcionario",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"funcionarioId\": \"5\",\r\n    \"nome\": \"Felipe\",\r\n    \"departamento\": {\r\n        \"nome\": \"TI\",\r\n        \"codigo\": \"2\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/funcionario/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"funcionario",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/funcionario/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"funcionario",
+						"5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

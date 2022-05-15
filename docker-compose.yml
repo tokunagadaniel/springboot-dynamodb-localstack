@@ -1,0 +1,87 @@
+version: "3"
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - '4566-4597:4566-4597'
+    environment:
+      - DEFAULT_REGION=sa-east-1
+      - SERVICES=dynamodb
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  aws_cli:
+    image: amazon/aws-cli
+    depends_on: 
+      - localstack
+    entrypoint: /bin/sh -c
+    command: >  
+     '
+     RED="\033[0;31m"
+     GREEN="\033[0;32m"
+     ACCESS_KEY="default"
+     SECRET_KEY="default"
+     REGION="sa-east-1"
+     COUNTER=15;
+     DYNAMODB_DESIRED_STATE="dynamodb available";
+     TABLE_DESIRED_STATE="ACTIVE";
+     SERVICE_ACTUAL_STATE=0;
+     
+      while [ $$COUNTER -ne 0 ] && [ $$SERVICE_ACTUAL_STATE != 1 ]
+      
+      do 
+      RESPONSE=$$(curl -sb --connect-timeout 2 /dev/null "localstack:4566/health?redirect" | tr -cd [^[:alnum:][:space:]]+) 
+      echo " Response from Localstack $$RESPONSE";
+
+      if [[ $$RESPONSE == *"$$DYNAMODB_DESIRED_STATE"* ]]; then SERVICE_ACTUAL_STATE=1; else SERVICE_ACTUAL_STATE=0; fi;
+      
+      COUNTER=$$((COUNTER-1)); 
+      echo "Service is not ready yet! $$COUNTER retries left."; 
+      sleep 3; 
+      done; 
+      echo backend is up;
+
+      echo "########### Creating profile ###########"
+
+      aws configure set aws_access_key_id $$ACCESS_KEY --profile=localstack
+      aws configure set aws_secret_access_key $$SECRET_KEY --profile=localstack      
+      aws configure set region $$REGION --profile=localstack
+
+      echo "########### Listing profile ###########"
+      aws configure list --profile=localstack
+
+      echo "########### Creating dynamodb table ###########"
+      
+      aws dynamodb --profile localstack create-table --endpoint-url=http://localstack:4566 \
+      --table-name employee \
+      --attribute-definitions \
+        AttributeName=id,AttributeType=S \
+        AttributeName=name,AttributeType=S \
+        AttributeName=departament,AttributeType=S \
+      --key-schema \
+        AttributeName=id,KeyType=HASH \
+      --provisioned-throughput \
+        ReadCapacityUnits=1,WriteCapacityUnits=1 \
+      --global-secondary-indexes "IndexName=indexEmployee,\
+        KeySchema=[{AttributeName=name,KeyType=HASH},{AttributeName=departament,KeyType=RANGE}],\
+        Projection={ProjectionType=ALL},\
+        ProvisionedThroughput={ReadCapacityUnits=1,WriteCapacityUnits=1}"
+        
+      RESPONSE=$$(aws dynamodb --profile localstack describe-table --endpoint-url=http://localstack:4566 --table-name employee | grep TableStatus)
+      
+      if [[ $$RESPONSE == *"$$TABLE_DESIRED_STATE"* ]]; then echo -e "$${GREEN}########### [Success] Table created ###########"; else echo -e "$${RED}########### [Error] Table not found ###########"; fi;
+      
+      echo "########### Testing table ###########"
+    
+      aws dynamodb --profile localstack scan --endpoint-url=http://localstack:4566 --table-name employee
+          
+      echo -e "$${GREEN}########### [Success] Reading ###########"
+    
+      aws dynamodb --profile localstack put-item --endpoint-url=http://localstack:4566 --table-name employee \
+      --item "{\"id\": {\"S\": \"1\"}, \"name\": {\"S\": \"Daniel\"}, \"departament\": {\"S\": {\"name\":\"TI\",\"code\":\"1\"}}}"
+
+      echo -e "$${GREEN}########### [Success] Writing ###########"
+
+      #aws dynamodb --profile localstack delete-table --endpoint-url=http://localstack:4566 --table-name employee
+      
+      '
