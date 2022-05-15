@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"funcionarioId\": \"5\",\r\n    \"nome\": \"Daniel\",\r\n    \"departamento\": {\r\n        \"nome\": \"TI\",\r\n        \"codigo\": \"2\"\r\n    }\r\n}",
+					"raw": "{\r\n    \"id\": \"5\",\r\n    \"name\": \"Daniel\",\r\n    \"departament\": {\r\n        \"name\": \"TI\",\r\n        \"code\": \"2\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,13 +20,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/funcionario",
+					"raw": "localhost:8080/employee",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"funcionario"
+						"employee"
 					]
 				}
 			},
@@ -45,13 +45,13 @@
 					"file": {}
 				},
 				"url": {
-					"raw": "localhost:8080/funcionario/5",
+					"raw": "localhost:8080/employee/5",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"funcionario",
+						"employee",
 						"5"
 					]
 				}
@@ -65,7 +65,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"funcionarioId\": \"5\",\r\n    \"nome\": \"Felipe\",\r\n    \"departamento\": {\r\n        \"nome\": \"TI\",\r\n        \"codigo\": \"2\"\r\n    }\r\n}",
+					"raw": "{\r\n    \"id\": \"5\",\r\n    \"name\": \"Felipe\",\r\n    \"departament\": {\r\n        \"name\": \"TI\",\r\n        \"code\": \"2\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -73,13 +73,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/funcionario/5",
+					"raw": "localhost:8080/employee/5",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"funcionario",
+						"employee",
 						"5"
 					]
 				}
@@ -101,13 +101,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/funcionario/5",
+					"raw": "localhost:8080/employee/5",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"funcionario",
+						"employee",
 						"5"
 					]
 				}
