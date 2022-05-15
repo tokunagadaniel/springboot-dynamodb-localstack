@@ -1,5 +1,6 @@
 package br.com.tokunaga.config;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -25,6 +26,9 @@ public class DynamodbConfiguration {
     @Value("${aws.access.key}")
     private String secretKey;
 
+    @Value("${aws.client.configuration.client-execution-timeout}")
+    private int clientExecutionTimeout;
+
     @Bean
     public DynamoDBMapper dynamoDBMapper() {
         return new DynamoDBMapper(buildAmazonDynamoDB());
@@ -35,6 +39,7 @@ public class DynamodbConfiguration {
                 .standard()
                 .withEndpointConfiguration(endpointConfiguration())
                 .withCredentials(credentialsProvider())
+                .withClientConfiguration(new ClientConfiguration().withClientExecutionTimeout(clientExecutionTimeout))
                 .build();
     }
 
