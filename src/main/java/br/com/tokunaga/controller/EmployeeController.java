@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static java.util.Objects.isNull;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/employee")
@@ -21,7 +23,11 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> get(@PathVariable("id") String id) {
-        return ResponseEntity.ok(repository.get(id));
+        Employee emp = repository.get(id);
+        if (!isNull(emp)) {
+            return ResponseEntity.ok(emp);
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
